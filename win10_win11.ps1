@@ -61,3 +61,21 @@ try {
 } catch {
     Write-Host "Error installing Zscaler Client Connector: $_"
 }
+
+#Add Dropbox Shortcut to Desktop get get GPO Backup
+
+
+$shortcutPath = "$env:USERPROFILE\Desktop\Dropbox.lnk"
+$targetURL = "https://www.dropbox.com/sh/pb86h95x693fw4t/AAC7qH41WdAe_8jnEbIWzBP8a?dl=0"
+
+$chromePath = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe' -ErrorAction SilentlyContinue).'(default)'
+if ($chromePath -eq $null) {
+    Write-Host "Chrome is not installed."
+    exit
+}
+
+$shell = New-Object -ComObject WScript.Shell
+$shortcut = $shell.CreateShortcut($shortcutPath)
+$shortcut.TargetPath = $chromePath
+$shortcut.Arguments = $targetURL
+$shortcut.Save()
